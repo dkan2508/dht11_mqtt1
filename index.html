@@ -53,10 +53,14 @@
                 }
 
                 connection.connect({
-                    onSuccess: function() {console.log("Connected to broker!\n");},
+                    onSuccess: function() {
+                        console.log("Connected to broker!\n");
+                        client.subscribe(TOPIC);
+                    },
                     onFailure: function() {console.log("Fail to start connection to broker!\n")},
                     userName: USERNAME,
                     password: PASSWORD,
+                    useSSL: true,
                 });
 
                 return connection;
