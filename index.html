@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHT11 Temperature & Humidity</title>
+</head>
+<body>
+    <p>Temperature: <span id="temp">&lt;place_holder&gt;</span></p>
+    <p>Humidity: <span id="hum">&lt;place_holder&gt;</span></p>
+
+    <script src="mqttws31.js"> </script>
+    <script>
+        const HOST = "27972db5311a496fa8a2042ff0627e93.s1.eu.hivemq.cloud";
+        const PORT = 8884;
+        const TOPIC = "dht11_reading";
+        const USERNAME = "dht11_broker";
+        const PASSWORD = "Dht11_broker";
+
+        if(!("WebSocket" in window)) {
+            let ua = navigator.userAgent;
+            console.log(ua);
+            let browser = null;
+
+            if (ua.indexOf("Chrome") > -1 && ua.indexOf("Edge") === -1 && ua.indexOf("OPR") === -1) {
+                browser = "Chrome";
+            } else if (ua.indexOf("Firefox") > -1) {
+                browser = "Firefox";
+            } else if (ua.indexOf("Safari") > -1 && ua.indexOf("Chrome") === -1) {
+                browser = "Safari";
+            } else if (ua.indexOf("Edge") > -1) {
+                browser = "Edge";
+            } else if (ua.indexOf("OPR") > -1) {
+                browser = "Opera";
+            }
+
+            alert(`WebSocket is not supported on ${browser} version ${navigator.appVersion}`);
+        } else {
+            function connectWS() {
+                let connection = new Paho.MQTT.Client(HOST, PORT, "/ws", "clientID");
+
+                connection.onConnectionLost = function(event) {
+                    console.warn("WebSocket connection failed.\nReconnecting...\n");
+                    connection.disconnect();
+                    setTimeout(connectWS, 3000);
+                };
+
+                connection.onMessageArrived = function(msg) {
+                    let payload = msg.payloadString;   // actual text sent from broker
+                    let parts = payload.split(".");
+                    document.getElementById("temp").textContent = parts[0];
+                    document.getElementById("hum").textContent = parts[1];
+                }
+
+                connection.connect({
+                    onSuccess: function() {console.log("Connected to broker!\n");},
+                    onFailure: function() {console.log("Fail to start connection to broker!\n")},
+                    userName: USERNAME,
+                    password: PASSWORD,
+                });
+
+                return connection;
+            }
+            let ws = connectWS();
+        }
+    </script>
+</body>
+</html>
