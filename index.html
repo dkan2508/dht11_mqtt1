@@ -37,7 +37,7 @@
             alert(`WebSocket is not supported on ${browser} version ${navigator.appVersion}`);
         } else {
             function connectWS() {
-                let connection = new Paho.MQTT.Client(HOST, PORT, "/ws", "clientID");
+                let connection = new Paho.MQTT.Client(HOST, PORT, "/mqtt", "clientID");
 
                 connection.onConnectionLost = function(event) {
                     console.warn("WebSocket connection failed.\nReconnecting...\n");
@@ -70,3 +70,4 @@
     </script>
 </body>
 </html>
+
