@@ -41,7 +41,7 @@
 
                 connection.onConnectionLost = function(event) {
                     console.warn("WebSocket connection failed.\nReconnecting...\n");
-                    connection.disconnect();
+                    // connection.disconnect();
                     setTimeout(connectWS, 3000);
                 };
 
@@ -55,7 +55,7 @@
                 connection.connect({
                     onSuccess: function() {
                         console.log("Connected to broker!\n");
-                        client.subscribe(TOPIC);
+                        connection.subscribe(TOPIC);
                     },
                     onFailure: function() {console.log("Fail to start connection to broker!\n")},
                     userName: USERNAME,
@@ -70,4 +70,3 @@
     </script>
 </body>
 </html>
-
