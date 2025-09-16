@@ -41,7 +41,6 @@
 
                 connection.onConnectionLost = function(event) {
                     console.warn("WebSocket connection failed.\nReconnecting...\n");
-                    // connection.disconnect();
                     setTimeout(connectWS, 3000);
                 };
 
@@ -70,3 +69,4 @@
     </script>
 </body>
 </html>
+
